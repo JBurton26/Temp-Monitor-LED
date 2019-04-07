@@ -12,8 +12,7 @@ public class MQTTHelper {
     final String serverUri = "tcp://broker.shiftr.io:1883";
 
     final String clientId = "JakePhone";
-    final String subscriptionTopic = "jb/phone";
-
+    final String subscriptionTopic = "phone";
     final String username = "cfc9ef9d";
     final String password = "aa8346a53372ae9f";
 
@@ -101,4 +100,5 @@ public class MQTTHelper {
             ex.printStackTrace();
         }
     }
+
 }

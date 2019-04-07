@@ -2,9 +2,12 @@ package uk.ac.napier.homesense;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import org.eclipse.paho.client.mqttv3.*;
+import org.json.JSONObject;
 
+import org.json.*;
 import helpers.MQTTHelper;
 
 
@@ -34,7 +37,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
                 Log.w("Debug", mqttMessage.toString());
-                dataReceived.setText(mqttMessage.toString());
+                String msgString = mqttMessage.toString();
+                JSONObject msgJSON = new JSONObject(msgString);
+                JSONArray jsonArr = msgJSON.getJSONArray("colour");
+
+                dataReceived.setText(msgString);
             }
 
             @Override
@@ -43,4 +50,41 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void redButtonClick(View view) {
+        int red[] = {255,0,0};
+        sendMessage(red);
+
+    }
+
+    public void greenButtonClick(View view) {
+        int green[] = {0,255,0};
+        sendMessage(green);
+    }
+
+    public void blueButtonClick(View view) {
+        int blue[] = {0,0,255};
+        sendMessage(blue);
+    }
+
+    public void sendMessage(int[] colour){
+        MqttMessage message = new MqttMessage();
+        JSONObject json = new JSONObject();
+        JSONArray jArray = new JSONArray();
+        for(int i=0; i < colour.length; i++){
+            jArray.put(colour[i]);
+        }
+        try {
+            json.put("colour", jArray);
+            message.setPayload(json.toString().getBytes());
+            try {
+                mqttHelper.mqttAndroidClient.publish("esp/ledstrip", message);
+            } catch (MqttException e) {
+                e.printStackTrace();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
