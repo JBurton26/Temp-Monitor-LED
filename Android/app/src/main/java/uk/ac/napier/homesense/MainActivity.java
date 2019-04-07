@@ -38,8 +38,8 @@ public class MainActivity extends AppCompatActivity {
             public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
                 Log.w("Debug", mqttMessage.toString());
                 String msgString = mqttMessage.toString();
-                JSONObject msgJSON = new JSONObject(msgString);
-                JSONArray jsonArr = msgJSON.getJSONArray("colour");
+                //JSONObject msgJSON = new JSONObject(msgString);
+                //JSONArray jsonArr = msgJSON.getJSONArray("colour");
 
                 dataReceived.setText(msgString);
             }

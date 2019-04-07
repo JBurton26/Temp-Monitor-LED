@@ -8,9 +8,7 @@ import org.eclipse.paho.client.mqttv3.*;
 
 public class MQTTHelper {
     public MqttAndroidClient mqttAndroidClient;
-
     final String serverUri = "tcp://broker.shiftr.io:1883";
-
     final String clientId = "JakePhone";
     final String subscriptionTopic = "phone";
     final String username = "cfc9ef9d";
@@ -23,17 +21,14 @@ public class MQTTHelper {
             public void connectComplete(boolean b, String s) {
                 Log.w("mqtt", s);
             }
-
             @Override
             public void connectionLost(Throwable throwable) {
 
             }
-
             @Override
             public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
                 Log.w("Mqtt", mqttMessage.toString());
             }
-
             @Override
             public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
 
