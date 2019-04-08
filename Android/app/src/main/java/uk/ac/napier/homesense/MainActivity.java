@@ -1,29 +1,20 @@
 package uk.ac.napier.homesense;
-import android.app.ActionBar;
-import android.support.constraint.ConstraintLayout;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.eclipse.paho.client.mqttv3.*;
 import org.json.JSONObject;
-
 import org.json.*;
-
-import java.util.List;
-
 import helpers.MQTTHelper;
 
-
 public class MainActivity extends AppCompatActivity {
-    MQTTHelper mqttHelper;
-    TextView room;
+    MQTTHelper mqttHelper;      //Initialises the MQTT Helper which is used to deal with all of the MQTT Messages
+    TextView room;      //Initialises all of the variables that are used later on
     TextView temp;
     TextView humidity;
     TextView room2;
@@ -35,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     EditText greenValue2;
     EditText blueValue;
     EditText blueValue2;
-    //List<String> list;
+    //List<String> list;    //For Future use
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,7 +104,13 @@ public class MainActivity extends AppCompatActivity {
             colour[0] = Integer.parseInt(redValue.getText().toString());
             colour[1] = Integer.parseInt(greenValue.getText().toString());
             colour[2] = Integer.parseInt(blueValue.getText().toString());
-
+            for(int i = 0; i<colour.length; i++){
+                if(colour[i] < 0 || colour[i] >255){
+                    Toast toast = Toast.makeText(this, "Error Updating LED", Toast.LENGTH_SHORT);
+                    toast.show();
+                    return;
+                }
+            }
             sendMessage(colour, topic);
         } catch (Exception e){
             e.printStackTrace();
@@ -131,7 +128,13 @@ public class MainActivity extends AppCompatActivity {
             colour[0] = Integer.parseInt(redValue2.getText().toString());
             colour[1] = Integer.parseInt(greenValue2.getText().toString());
             colour[2] = Integer.parseInt(blueValue2.getText().toString());
-
+            for(int i = 0; i<colour.length; i++){
+                if(colour[i] < 0 || colour[i] >255){
+                    Toast toast = Toast.makeText(this, "Error Updating LED", Toast.LENGTH_SHORT);
+                    toast.show();
+                    return;
+                }
+            }
             sendMessage(colour, topic);
         } catch (Exception e){
             e.printStackTrace();
@@ -143,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
         MqttMessage message = new MqttMessage();
         JSONObject json = new JSONObject();
         JSONArray jArray = new JSONArray();
+
         for(int i=0; i < colour.length; i++){
             jArray.put(colour[i]);
         }
