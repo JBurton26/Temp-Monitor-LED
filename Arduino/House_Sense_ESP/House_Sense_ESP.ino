@@ -70,8 +70,11 @@ void setup() {
   client.onMessage(messageReceived);
   dht.begin();
   FastLED.addLeds<WS2801, DATA_PIN, CLOCK_PIN, RGB>(leds, NUM_LEDS);
+    for(int i = 0; i< NUM_LEDS; i++){
+    leds[i].setRGB(0,0,0);
+  }
+  FastLED.show();
   connect();
-  
   client.subscribe("esp/kitchen");
   client.subscribe("helloListener");
 }
@@ -82,6 +85,8 @@ void loop() {
 
   if (!client.connected()) {
     connect();
+    client.subscribe("esp/kitchen");
+    client.subscribe("helloListener");
   }
 
   // publish a message roughly every second.

@@ -4,55 +4,118 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    >
 
-    <Button
-        android:id="@+id/buttonGreen"
+    <EditText
+        android:id="@+id/greenValue2"
+        android:layout_width="155dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="200dp"
+        android:ems="10"
+        android:hint="Green Value (0-255)"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/redValue2" />
+
+    <EditText
+        android:id="@+id/redValue2"
+        android:layout_width="155dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="200dp"
+        android:ems="10"
+        android:hint="Red Value (0-255)"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/room2" />
+
+    <TextView
+        android:id="@+id/room2"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="220dp"
+        android:layout_marginEnd="250dp"
+        android:text="Room"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/room" />
+
+    <EditText
+        android:id="@+id/blueValue2"
+        android:layout_width="155dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="200dp"
+        android:ems="10"
+        android:hint="Blue Value (0-255)"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/greenValue2" />
+
+    <TextView
+        android:id="@+id/humidity2"
+        android:layout_width="wrap_content"
+        android:layout_height="16dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="10dp"
+        android:text="Humidity:"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/temp2" />
+
+    <TextView
+        android:id="@+id/temp2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="400dp"
-        android:layout_marginEnd="20dp"
-        android:onClick="greenButtonClick"
-        android:text="Green"
-        app:layout_constraintEnd_toStartOf="@+id/buttonBlue"
-        app:layout_constraintStart_toEndOf="@+id/buttonRed"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginTop="250dp"
+        android:layout_marginEnd="10dp"
+        android:text="Temp:"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/temp" />
+
+    <Button
+        android:id="@+id/ledButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="200dp"
+        android:layout_marginEnd="10dp"
+        android:onClick="updateRoom2LED"
+        android:text="Update LED"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ledButton" />
+
+    <EditText
+        android:id="@+id/greenValue"
+        android:layout_width="155dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="200dp"
+        android:ems="10"
+        android:hint="Green Value (0-255)"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/redValue" />
+
+    <EditText
+        android:id="@+id/blueValue"
+        android:layout_width="155dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="200dp"
+        android:ems="10"
+        android:hint="Blue Value (0-255)"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/greenValue" />
 
     <TextView
         android:id="@+id/temp"
         android:layout_width="wrap_content"
-        android:layout_height="16dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="10dp"
         android:text="Temp:"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.911"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.085" />
-
-    <Button
-        android:id="@+id/buttonRed"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="400dp"
-        android:layout_marginEnd="250dp"
-        android:onClick="redButtonClick"
-        android:text="Red"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/buttonBlue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="400dp"
-        android:layout_marginEnd="50dp"
-        android:onClick="blueButtonClick"
-        android:text="Blue"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -60,24 +123,44 @@
         android:id="@+id/room"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="300dp"
+        android:layout_marginEnd="250dp"
         android:text="Room"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/humidity"
         android:layout_width="wrap_content"
         android:layout_height="16dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="10dp"
         android:text="Humidity:"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.908"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/temp" />
+
+    <Button
+        android:id="@+id/ledButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="185dp"
+        android:layout_marginEnd="10dp"
+        android:onClick="updateRoom1LED"
+        android:text="Update LED"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/redValue"
+        android:layout_width="155dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="200dp"
+        android:ems="10"
+        android:hint="Red Value (0-255)"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/room" />
 
 </android.support.constraint.ConstraintLayout>
