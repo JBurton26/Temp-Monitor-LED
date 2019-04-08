@@ -15,7 +15,7 @@ import helpers.MQTTHelper;
 public class MainActivity extends AppCompatActivity {
     MQTTHelper mqttHelper;      //Initialises the MQTT Helper which is used to deal with all of the MQTT Messages
     TextView room;      //Initialises all of the variables that are used later on
-    TextView temp;
+    TextView temp;      //TODO: Get rid of Hard-coding mess
     TextView humidity;
     TextView room2;
     TextView temp2;
@@ -26,38 +26,36 @@ public class MainActivity extends AppCompatActivity {
     EditText greenValue2;
     EditText blueValue;
     EditText blueValue2;
-    //List<String> list;    //For Future use
+    //List<String> list;    //TODO: Add functionality for more than two rooms, each with their own activity/view
+                            //TODO: Add Info on buttons, keeping separate view for LED control
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) { //Method Activated when instance is created
+        super.onCreate(savedInstanceState);     //continues where it left off
         setContentView(R.layout.activity_main);
+        //gives the initialised variables a corresponding view on the activity
         temp = findViewById(R.id.temp);
         room = findViewById(R.id.room);
         humidity = findViewById(R.id.humidity);
         temp2 = findViewById(R.id.temp2);
         room2 = findViewById(R.id.room2);
         humidity2 = findViewById(R.id.humidity2);
-        startMqtt();
+        startMqtt();    //Calls Method that initializes the MQTTHelper class
     }
-    private void startMqtt() {
-        mqttHelper = new MQTTHelper(getApplicationContext());
+    private void startMqtt() { //Similar to the constructor in the MQTTHelper class
+        mqttHelper = new MQTTHelper(getApplicationContext()); //this
         mqttHelper.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean b, String s) {
 
             }
-
             @Override
             public void connectionLost(Throwable throwable) {
 
             }
-
             @Override
-            public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
+            public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {        //Handler for when messages are taken in
                 Log.w("Debug", mqttMessage.toString());
                 String msgString = mqttMessage.toString();
-
-
                 try {
                     JSONObject msgJSON = new JSONObject(msgString);
                     String ifstate = msgJSON.getString("room");
