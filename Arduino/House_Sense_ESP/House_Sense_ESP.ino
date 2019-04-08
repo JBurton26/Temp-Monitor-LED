@@ -1,14 +1,33 @@
+#define FASTLED_ESP8266_RAW_PIN_ORDER
+#define CONFIG_LED_SPI_CHIPSET WS2801
+#define FASTLED_INTERNAL
+
 #include <ESP8266WiFi.h>
 #include <MQTT.h>
+#include <ArduinoJson.h>
+#include "DHT.h"
+#include <SPI.h>
+#include <FastLED.h>
+
+#define DHTPIN 4     // Digital pin connected to the DHT sensor
+#define DHTTYPE DHT11   // DHT 11
+#define DATA_PIN 0
+#define CLOCK_PIN 2
+#define NUM_LEDS 5
 
 const char ssid[] = "jblap";
 const char pass[] = "1234jblt";
-
+DHT dht(DHTPIN, DHTTYPE); //Initialises the DHT11 Sensor
 WiFiClient net;
 MQTTClient client;
+CRGB leds[5];
 
 unsigned long lastMillis = 0;
-
+String str;
+int ledstripstate = 0;
+int red = 0;
+int blue = 0;
+int green = 0;
 void connect() {
   Serial.print("checking wifi...");
   while (WiFi.status() != WL_CONNECTED) {
@@ -30,7 +49,7 @@ void connect() {
 }
 
 void messageReceived(String &topic, String &payload) {
-  Serial.println("incoming: " + topic + " - " + payload);
+  Serial.println(payload);
 }
 
 void setup() {
@@ -38,7 +57,8 @@ void setup() {
   WiFi.begin(ssid, pass);
   client.begin("broker.shiftr.io", net);
   client.onMessage(messageReceived);
-
+  dht.begin();
+  FastLED.addLeds<WS2801, DATA_PIN, CLOCK_PIN, RGB>(leds, NUM_LEDS);
   connect();
 }
 
@@ -53,6 +73,28 @@ void loop() {
   // publish a message roughly every second.
   if (millis() - lastMillis > 5000) {
     lastMillis = millis();
-    client.publish("/phone", "world");
+    getSendTemp();
   }
+}
+void getSendTemp(){
+  DynamicJsonBuffer jsonBuffer(1024);
+  float h = dht.readHumidity(); //reads the humidity from the sensor
+  float t = dht.readTemperature(); //reads the temp from the sensor in Celcius as default because it is a sensible scale
+  if (isnan(h) || isnan(t)) { //checks if there are readings being taken from the sensor, if it cant detect any, it tells the user
+    Serial.println(F("Failed to read from DHT sensor!"));
+    return; //restarts ther loop
+  }
+  float hic = dht.computeHeatIndex(t, h, false);
+  JsonObject& doc = jsonBuffer.createObject();
+  doc["room"] = "Kitchen";
+  doc["ledState"] = 0;
+  JsonArray& rgb = doc.createNestedArray("colour");
+  rgb.add(red);
+  rgb.add(green);
+  rgb.add(blue);
+  doc["temp"] = hic;
+  doc["humidity"] = h;
+  String payload;
+  doc.printTo(payload);
+  Serial.println(payload);
 }
