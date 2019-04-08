@@ -13,13 +13,18 @@ import helpers.MQTTHelper;
 
 public class MainActivity extends AppCompatActivity {
     MQTTHelper mqttHelper;
-    TextView dataReceived;
+    TextView room;
+    TextView temp;
+    TextView humidity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        dataReceived = findViewById(R.id.dataReceived);
+        temp = findViewById(R.id.temp);
+        room = findViewById(R.id.room);
+        humidity = findViewById(R.id.humidity);
         startMqtt();
+
     }
     private void startMqtt() {
         mqttHelper = new MQTTHelper(getApplicationContext());
@@ -36,12 +41,20 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
-                Log.w("Debug", mqttMessage.toString());
+                //Log.w("Debug", mqttMessage.toString());
                 String msgString = mqttMessage.toString();
-                //JSONObject msgJSON = new JSONObject(msgString);
-                //JSONArray jsonArr = msgJSON.getJSONArray("colour");
-
-                dataReceived.setText(msgString);
+                String var;
+                try {
+                    JSONObject msgJSON = new JSONObject(msgString);
+                    var = "Temp: " + msgJSON.getString("temp") + " C";
+                    temp.setText(var);
+                    var = "Humidity: " + msgJSON.getString("humidity") + "%";
+                    humidity.setText(var);
+                    var = msgJSON.getString("room");
+                    room.setText(var);
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -78,13 +91,14 @@ public class MainActivity extends AppCompatActivity {
             json.put("colour", jArray);
             message.setPayload(json.toString().getBytes());
             try {
-                mqttHelper.mqttAndroidClient.publish("esp/ledstrip", message);
+                mqttHelper.mqttAndroidClient.publish("esp/kitchen", message);
             } catch (MqttException e) {
                 e.printStackTrace();
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        Log.w("Debug", json.toString());
     }
 
 }

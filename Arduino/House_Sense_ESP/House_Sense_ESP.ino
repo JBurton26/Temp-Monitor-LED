@@ -28,6 +28,7 @@ int ledstripstate = 0;
 int red = 0;
 int blue = 0;
 int green = 0;
+const String roomname = "Kitchen";
 void connect() {
   Serial.print("checking wifi...");
   while (WiFi.status() != WL_CONNECTED) {
@@ -43,13 +44,23 @@ void connect() {
 
   Serial.println("\nconnected!");
 
-  client.subscribe("esp/ledstrip");
-  client.subscribe("helloListener");
   // client.unsubscribe("/hello");
 }
 
 void messageReceived(String &topic, String &payload) {
   Serial.println(payload);
+  if(topic == "esp/kitchen"){
+    DynamicJsonBuffer recBuffer(1024);
+    JsonObject& obj = recBuffer.parseObject(payload);
+    red = obj["colour"][0];
+    green = obj["colour"][1];
+    blue = obj["colour"][2];
+    for(int i = 0; i< NUM_LEDS; i++){
+      leds[i].setRGB(red,green,blue);
+    }
+    FastLED.show();
+  }
+  
 }
 
 void setup() {
@@ -60,6 +71,9 @@ void setup() {
   dht.begin();
   FastLED.addLeds<WS2801, DATA_PIN, CLOCK_PIN, RGB>(leds, NUM_LEDS);
   connect();
+  
+  client.subscribe("esp/kitchen");
+  client.subscribe("helloListener");
 }
 
 void loop() {
@@ -71,7 +85,7 @@ void loop() {
   }
 
   // publish a message roughly every second.
-  if (millis() - lastMillis > 5000) {
+  if (millis() - lastMillis > 10000) {
     lastMillis = millis();
     getSendTemp();
   }
@@ -86,7 +100,7 @@ void getSendTemp(){
   }
   float hic = dht.computeHeatIndex(t, h, false);
   JsonObject& doc = jsonBuffer.createObject();
-  doc["room"] = "Kitchen";
+  doc["room"] = roomname;
   doc["ledState"] = 0;
   JsonArray& rgb = doc.createNestedArray("colour");
   rgb.add(red);
@@ -96,5 +110,6 @@ void getSendTemp(){
   doc["humidity"] = h;
   String payload;
   doc.printTo(payload);
-  Serial.println(payload);
+  //Serial.println(payload);
+  client.publish("phone", payload);
 }
